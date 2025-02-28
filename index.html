@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>CSE 160 Assignment 3</title>
+  </head>
+
+  <body onload="main()">
+    <canvas id="webgl" width="600" height="600">
+    Please use a browser that supports "canvas"
+    </canvas>
+
+    <div id="UI">
+        <p>
+          Camera Angle X<input type="range" min="0" max="360" value="5" class="slider" id="angleSliderX">
+          Camera Angle Y<input type="range" min="0" max="360" value="0" class="slider" id="angleSliderY">
+        </p>
+        <p>
+          Arm Angle<input type="range" min="-45" max="0" value="0" class="slider" id="armSlider">
+          Lower Arm Angle<input type="range" min="0" max="45" value="0" class="slider" id="lowerArmSlider">
+          Leg Angle<input type="range" min="320" max="360" value="360" class="slider" id="legSlider">
+        </p>
+        <p>
+        </p>
+
+          
+    </div>
+    <canvas id="colorCanvas" width="20" height="20"></canvas>
+    <div id="student info">
+      <p>Name: Igor Bessa</p>
+      <p>Student ID: 1869612</p>
+      <p>Email: ibessa@ucsc.edu</p>
+      <p>Controls:
+        Move around with WASD. Rotate view with Q (left) and E (right).
+      </p>
+      <p>
+      </p>
+    </div>
+   
+    <script src = "src/Point.js"></script>
+    <script src = "src/Triangle.js"></script>
+    <script src = "src/Circle.js"></script>
+    <script src = "src/Cube.js"></script>
+    <script src = "src/Cone.js"></script>
+    <script src = "src/Pyramid.js"></script>
+    <script src = "src/Vectors.js"></script>
+    <script src = "src/Camera.js"></script>
+    <script src="lib/webgl-utils.js"></script>
+    <script src="lib/webgl-debug.js"></script>
+    <script src="lib/cuon-utils.js"></script>
+    <script src="lib/cuon-matrix-cse160.js"></script>
+    <script src="src/BlockyWorld.js"></script>
+  </body>
+</html>
