@@ -115,6 +115,7 @@ let g_armAngle = -40.0;
 let g_lowerArmAngle = 0.0;
 let g_animationOn = false;
 let g_legAngle = 0.0;
+let g_normalOn = false;
 
 // camera variables
 let eyeVector = new Vector3([0, 0, 3]);
@@ -476,6 +477,7 @@ function renderAllShapes() {
     let sky = new Cube();
     sky.color = [0.1, 0.4, 1.0, 1.0];
     sky.textureNum = -2;
+    if (g_normalOn) sky.textureNum = -3;
     sky.matrix.scale(100,100,100);
     sky.matrix.translate(-0.5, -0.5, -0.5);
     sky.renderFast();
@@ -488,6 +490,7 @@ function renderAllShapes() {
     let bodyMatrix = new Matrix4(body.matrix);
     body.matrix.scale(0.75, 0.75, 0.75);
     body.textureNum = 0;
+    if (g_normalOn) body.textureNum = -3;
     body.renderFast();
 
     let rightArmMat;
@@ -583,8 +586,12 @@ function updateColor(){
 
 function setupHTMLElements(){
     // sliders
-    document.getElementById("angleSliderX").addEventListener("mousemove", function () { g_globalAngleX = this.value; renderAllShapes(); } );
-    document.getElementById("angleSliderY").addEventListener("mousemove", function () { g_globalAngleY = this.value; renderAllShapes(); } );
+    document.getElementById("angleSliderX").addEventListener("mousemove", function () { g_globalAngleX = this.value; } );
+    document.getElementById("angleSliderY").addEventListener("mousemove", function () { g_globalAngleY = this.value; } );
+
+    // buttons 
+    document.getElementById("normalOn").onclick = function () { g_normalOn = true; renderAllShapes(); };
+    document.getElementById("normalOff").onclick = function () { g_normalOn = false; renderAllShapes(); };
     
 }
 
