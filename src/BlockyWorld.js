@@ -4,15 +4,17 @@ var VSHADER_SOURCE = `
   precision mediump float;
   attribute vec4 a_Position;
   attribute vec2 a_UV;
+  attribute vec3 a_Normal;
   varying vec2 v_UV;
+  varying vec3 v_Normal;
   uniform mat4 u_ModelMatrix;
   uniform mat4 u_GlobalRotateMatrix;
   uniform mat4 u_ViewMatrix;
   uniform mat4 u_ProjectionMatrix;
   void main() {
-    //gl_Position = u_ModelMatrix * u_GlobalRotateMatrix * a_Position;
     gl_Position = u_ProjectionMatrix * u_ViewMatrix * u_GlobalRotateMatrix * u_ModelMatrix * a_Position;
     v_UV = a_UV;
+    v_Normal = a_Normal;
   }`;
 
 // Fragment shader program
@@ -20,6 +22,7 @@ var FSHADER_SOURCE = `
   precision mediump float;
   uniform vec4 u_FragColor;
   varying vec2 v_UV;
+  varying vec3 v_Normal;
   uniform sampler2D u_sampler0;
   uniform sampler2D u_sampler1;
   uniform sampler2D u_sampler2;
@@ -32,7 +35,10 @@ var FSHADER_SOURCE = `
   uniform sampler2D u_sampler9;
   uniform int u_whichTexture;
   void main() {
-    if (u_whichTexture == -2){
+    if (u_whichTexture == -3){           // use normal
+        gl_FragColor = vec4((v_Normal+1.0)/2.0, 1.0);
+    }
+    else if (u_whichTexture == -2){
         gl_FragColor = u_FragColor;
     } else if (u_whichTexture == -1){           // UV debug color
         gl_FragColor = vec4(v_UV, 1.0, 1.0);
@@ -86,6 +92,7 @@ let u_GlobalRotateMatrix;
 let u_ViewMatrix;
 let u_ProjectionMatrix;
 let u_whichTexture;
+let a_Normal;
 let u_sampler0;
 let u_sampler1;
 let u_sampler2;
@@ -159,6 +166,13 @@ function connectVariablesToGLSL() {
         console.log("Failed to get the storage location of a_UV");
         return;
     }
+
+    a_Normal = gl.getAttribLocation(gl.program, 'a_Normal');
+    if(a_Normal < 0){
+        console.log("Failed to get the storage location of a_Normal");
+        return;
+    }
+
     // Get the storage location of u_FragColor
     u_FragColor = gl.getUniformLocation(gl.program, "u_FragColor");
     if (!u_FragColor) {
