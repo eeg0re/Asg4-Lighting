@@ -419,13 +419,9 @@ let worldMap = [
 function generateMap(map){
     for(let x = 0; x < worldMap.length; x++){
         for(let y = 0; y < worldMap[x].length; y++){
-            //map[x][y] = Math.floor(Math.random() * 5);
             if(x == 0 || x == worldMap.length - 1 || y == 0 || y == worldMap[x].length - 1){
                 map[x][y] = map[x][y] = Math.floor(Math.random() * 5);;
             }
-            // if((x == 4 && y == 4) || (x == 4 && y == 5) || (x == 5 && y == 4) || (x == 5 && y == 5)){
-            //     map[x][y] = 0;
-            // }
         }
     }
 }

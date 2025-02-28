@@ -28,75 +28,75 @@ class Triangle{
     }   
 }
 
-function drawTriangle(vertices){
-    let n = 3 // num vertices
+// function drawTriangle(vertices){
+//     let n = 3 // num vertices
 
-    // create buffer object
-    let vertexBuffer = gl.createBuffer();
-    if(!vertexBuffer){
-        console.log("Failed to create the buffer object");
-        return -1;
-    }
+//     // create buffer object
+//     let vertexBuffer = gl.createBuffer();
+//     if(!vertexBuffer){
+//         console.log("Failed to create the buffer object");
+//         return -1;
+//     }
 
-    // bind buffer object to target
-    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
-    // write data into the buffer object
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.DYNAMIC_DRAW);
+//     // bind buffer object to target
+//     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+//     // write data into the buffer object
+//     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.DYNAMIC_DRAW);
 
-    // assign buffer object to a_Position variable 
-    gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 0, 0);
+//     // assign buffer object to a_Position variable 
+//     gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 0, 0);
     
-    // enable assignment to a_Position variable
-    gl.enableVertexAttribArray(a_Position);
+//     // enable assignment to a_Position variable
+//     gl.enableVertexAttribArray(a_Position);
 
-    // create buffer object for Normals
-    if (normals) {
-        let normalBuffer = gl.createBuffer();
-        if(!normalBuffer){
-            console.log("Failed to create the buffer object");
-            return -1;
-        }
-        // bind buffer object to target
-        gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
-        // write data into the buffer object
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normals), gl.DYNAMIC_DRAW);
-        // assign buffer object to a_Normal variable
-        gl.vertexAttribPointer(a_Normal, 3, gl.FLOAT, false, 0, 0);
-        // enable assignment to a_Normal variable
-        gl.enableVertexAttribArray(a_Normal);
-    }
+//     // create buffer object for Normals
+//     if (normals) {
+//         let normalBuffer = gl.createBuffer();
+//         if(!normalBuffer){
+//             console.log("Failed to create the buffer object");
+//             return -1;
+//         }
+//         // bind buffer object to target
+//         gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
+//         // write data into the buffer object
+//         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normals), gl.DYNAMIC_DRAW);
+//         // assign buffer object to a_Normal variable
+//         gl.vertexAttribPointer(a_Normal, 3, gl.FLOAT, false, 0, 0);
+//         // enable assignment to a_Normal variable
+//         gl.enableVertexAttribArray(a_Normal);
+//     }
 
-    gl.drawArrays(gl.TRIANGLES, 0, n);
-}
+//     gl.drawArrays(gl.TRIANGLES, 0, n);
+// }
 
-function drawTriangle3D(vertices){
-    let n = vertices.length / 3; // number of vertices
+// function drawTriangle3D(vertices){
+//     let n = vertices.length / 3; // number of vertices
 
-    if (n % 3 != 0) {
-        console.log("Not enough vertices to form a triangle");
-        return;
-    }
+//     if (n % 3 != 0) {
+//         console.log("Not enough vertices to form a triangle");
+//         return;
+//     }
 
-    // create buffer object
-    let vertexBuffer = gl.createBuffer();
-    if(!vertexBuffer){
-        console.log("Failed to create the buffer object");
-        return -1;
-    }
+//     // create buffer object
+//     let vertexBuffer = gl.createBuffer();
+//     if(!vertexBuffer){
+//         console.log("Failed to create the buffer object");
+//         return -1;
+//     }
 
-    // bind buffer object to target
-    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
-    // write data into the buffer object
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.DYNAMIC_DRAW);
+//     // bind buffer object to target
+//     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+//     // write data into the buffer object
+//     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.DYNAMIC_DRAW);
 
-    // assign buffer object to a_Position variable 
-    gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 0, 0);
+//     // assign buffer object to a_Position variable 
+//     gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 0, 0);
     
-    // enable assignment to a_Position variable
-    gl.enableVertexAttribArray(a_Position);
+//     // enable assignment to a_Position variable
+//     gl.enableVertexAttribArray(a_Position);
 
-    gl.drawArrays(gl.TRIANGLES, 0, n);
-}
+//     gl.drawArrays(gl.TRIANGLES, 0, n);
+// }
 
 function drawTriangle3DUV(vertices, uv){
     let n = vertices.length/3 // num vertices
@@ -142,6 +142,7 @@ function drawTriangle3DUV(vertices, uv){
 
 function drawTriangle3DUVNormal(vertices, uv, normals){
     let n = vertices.length / 3; // num vertices
+    //console.log(normals);
 
     // create buffer object for vertices
     let vertexBuffer = gl.createBuffer();
@@ -196,7 +197,8 @@ function drawTriangle3DUVNormal(vertices, uv, normals){
     
     // enable assignment to a_Normal variable
     gl.enableVertexAttribArray(a_Normal);
+    
 
-    // draw the triangles
+    // // draw the triangles
     gl.drawArrays(gl.TRIANGLES, 0, n);
 }
