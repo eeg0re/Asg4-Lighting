@@ -5,6 +5,7 @@ class Sphere{
         // this.size = 5.0;
         this.matrix = new Matrix4();
         this.textureNum = -1;
+        this.specular = 0; // false by default
     }
 
 
@@ -13,6 +14,7 @@ class Sphere{
 
         // accomodate for textures later
         gl.uniform1i(u_whichTexture, this.textureNum);
+        gl.uniform1i(u_SpecularOn, this.specular);
 
         gl.uniform4f(u_FragColor, rgba[0], rgba[1], rgba[2], rgba[3]);
 

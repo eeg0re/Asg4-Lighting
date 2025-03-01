@@ -38,6 +38,8 @@ var FSHADER_SOURCE = `
   uniform sampler2D u_sampler9;
   uniform vec3 u_lightPos;
   uniform int u_whichTexture;
+  uniform vec3 u_CameraPos;
+  uniform int u_SpecularOn;
   void main() {
     if (u_whichTexture == -3){           // use normal
         gl_FragColor = vec4((v_Normal+1.0)/2.0, 1.0);
@@ -81,11 +83,27 @@ var FSHADER_SOURCE = `
 
     vec3 lightVector = u_lightPos - vec3(v_VertPos);
     float r=length(lightVector);
-    if(r<1.0){
-        gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+
+    // N dot L
+    vec3 L = normalize(lightVector);
+    vec3 N = normalize(v_Normal);
+    float nDotL = max(dot(N, L), 0.0);
+
+    // Reflection 
+    vec3 R = reflect(-L, N);
+    vec3 E = normalize(u_CameraPos - vec3(v_VertPos));
+
+    // Specular 
+    float specular = pow(max(dot(R, E), 0.0), 2.0);
+
+    vec3 diffuse = vec3(gl_FragColor) * nDotL;
+    vec3 ambient = vec3(gl_FragColor) * 0.5;
+
+    if(u_SpecularOn == 0){
+        gl_FragColor = vec4(specular + diffuse + ambient, 1.0);   
     }
-    else if(r<2.0){
-        gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
+    else{
+        gl_FragColor = vec4(diffuse + ambient, 1.0);
     }
   }`;
 
@@ -117,6 +135,9 @@ let u_sampler7;
 let u_sampler8;
 let u_sampler9;
 let u_lightPos; 
+let u_CameraPos;
+let u_SpecularOn;
+
 
 // UI variables
 let g_selectedSize = 10; 
@@ -282,6 +303,18 @@ function connectVariablesToGLSL() {
     u_lightPos = gl.getUniformLocation(gl.program, 'u_lightPos');
     if(!u_lightPos){
         console.log("Failed to get the storage location of u_lightPos");
+        return false;
+    }
+
+    u_CameraPos = gl.getUniformLocation(gl.program, 'u_CameraPos');
+    if(!u_CameraPos){
+        console.log("Failed to get the storage location of u_CameraPos");
+        return false;
+    }
+
+    u_SpecularOn = gl.getUniformLocation(gl.program, 'u_SpecularOn');
+    if(!u_SpecularOn){
+        console.log("Failed to get the storage location of u_SpecularOn");
         return false;
     }
 }
@@ -508,6 +541,7 @@ function renderAllShapes() {
     body.matrix.scale(0.75, 0.75, 0.75);
     body.textureNum = 0;
     if (g_normalOn) body.textureNum = -3;
+    body.specular = 1;
     body.renderFast();
 
     let rightArmMat;
@@ -586,17 +620,19 @@ function renderAllShapes() {
     sphere.matrix.translate(2, 0.2, 0.1);
     sphere.textureNum = 0;
     if (g_normalOn) sphere.textureNum = -3;
+    sphere.specular = 1;
     sphere.renderFast();
 
     gl.uniform3f(u_lightPos, g_lightPos[0], g_lightPos[1], g_lightPos[2]);
     let light = new Cube();
     light.color = [1, 1, 0, 1];
     light.matrix.translate(g_lightPos[0], g_lightPos[1], g_lightPos[2]);
-    light.matrix.scale(0.1, 0.1, 0.1);
+    light.matrix.scale(-0.1, -0.1, -0.1);
     light.matrix.translate(-0.5, -0.5, -0.5);
-    light.textureNum = 0;
+    light.textureNum = -2;
     light.renderFast();
     
+    gl.uniform3f(u_CameraPos, camera.eye.elements[0], camera.eye.elements[1], camera.eye.elements[2]);
 }
 
 function convertCoords(ev) {
@@ -642,6 +678,8 @@ function tick(){
     renderAllShapes();
 
     requestAnimationFrame(tick);
+
+    //g_lightPos[0] = Math.cos(g_seconds);
 }
 
 function main() {
