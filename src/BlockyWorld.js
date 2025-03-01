@@ -40,6 +40,7 @@ var FSHADER_SOURCE = `
   uniform int u_whichTexture;
   uniform vec3 u_CameraPos;
   uniform int u_SpecularOn;
+  uniform int u_lightOn;
   void main() {
     if (u_whichTexture == -3){           // use normal
         gl_FragColor = vec4((v_Normal+1.0)/2.0, 1.0);
@@ -99,11 +100,16 @@ var FSHADER_SOURCE = `
     vec3 diffuse = vec3(gl_FragColor) * nDotL;
     vec3 ambient = vec3(gl_FragColor) * 0.5;
 
-    if(u_SpecularOn == 0){
-        gl_FragColor = vec4(specular + diffuse + ambient, 1.0);   
+    if(u_lightOn == 0){
+        gl_FragColor = vec4(ambient, 1.0);
     }
     else{
-        gl_FragColor = vec4(diffuse + ambient, 1.0);
+        if(u_SpecularOn == 0){
+            gl_FragColor = vec4(specular + diffuse + ambient, 1.0);   
+        }
+        else{
+            gl_FragColor = vec4(diffuse + ambient, 1.0);
+        }
     }
   }`;
 
@@ -137,6 +143,7 @@ let u_sampler9;
 let u_lightPos; 
 let u_CameraPos;
 let u_SpecularOn;
+let u_lightOn;
 
 
 // UI variables
@@ -151,7 +158,8 @@ let g_lowerArmAngle = 0.0;
 let g_animationOn = false;
 let g_legAngle = 0.0;
 let g_normalOn = false;
-let g_lightPos = [0, 1, -2];
+let g_lightPos = [0, 1, 2];
+let g_lightOn = 1;
 
 // camera variables
 let eyeVector = new Vector3([0, 0, 3]);
@@ -315,6 +323,12 @@ function connectVariablesToGLSL() {
     u_SpecularOn = gl.getUniformLocation(gl.program, 'u_SpecularOn');
     if(!u_SpecularOn){
         console.log("Failed to get the storage location of u_SpecularOn");
+        return false;
+    }
+
+    u_lightOn = gl.getUniformLocation(gl.program, 'u_lightOn');
+    if(!u_lightOn){
+        console.log("Failed to get the storage location of u_lightOn");
         return false;
     }
 }
@@ -633,6 +647,7 @@ function renderAllShapes() {
     light.renderFast();
     
     gl.uniform3f(u_CameraPos, camera.eye.elements[0], camera.eye.elements[1], camera.eye.elements[2]);
+    gl.uniform1i(u_lightOn, g_lightOn);
 }
 
 function convertCoords(ev) {
@@ -664,6 +679,7 @@ function setupHTMLElements(){
     // buttons 
     document.getElementById("normalOn").onclick = function () { g_normalOn = true; renderAllShapes(); };
     document.getElementById("normalOff").onclick = function () { g_normalOn = false; renderAllShapes(); };
+    document.getElementById("lightToggle").onclick = function () { g_lightOn = !g_lightOn; renderAllShapes(); };
     
 }
 
@@ -679,7 +695,7 @@ function tick(){
 
     requestAnimationFrame(tick);
 
-    //g_lightPos[0] = Math.cos(g_seconds);
+    g_lightPos[0] = Math.cos(g_seconds);
 }
 
 function main() {
