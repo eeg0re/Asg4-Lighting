@@ -7,6 +7,7 @@ var VSHADER_SOURCE = `
   attribute vec3 a_Normal;
   varying vec2 v_UV;
   varying vec3 v_Normal;
+  varying vec4 v_VertPos;
   uniform mat4 u_ModelMatrix;
   uniform mat4 u_GlobalRotateMatrix;
   uniform mat4 u_ViewMatrix;
@@ -15,6 +16,7 @@ var VSHADER_SOURCE = `
     gl_Position = u_ProjectionMatrix * u_ViewMatrix * u_GlobalRotateMatrix * u_ModelMatrix * a_Position;
     v_UV = a_UV;
     v_Normal = a_Normal;
+    v_VertPos = u_ModelMatrix * a_Position;
   }`;
 
 // Fragment shader program
@@ -23,6 +25,7 @@ var FSHADER_SOURCE = `
   uniform vec4 u_FragColor;
   varying vec2 v_UV;
   varying vec3 v_Normal;
+  varying vec4 v_VertPos;
   uniform sampler2D u_sampler0;
   uniform sampler2D u_sampler1;
   uniform sampler2D u_sampler2;
@@ -33,6 +36,7 @@ var FSHADER_SOURCE = `
   uniform sampler2D u_sampler7;
   uniform sampler2D u_sampler8;
   uniform sampler2D u_sampler9;
+  uniform vec3 u_lightPos;
   uniform int u_whichTexture;
   void main() {
     if (u_whichTexture == -3){           // use normal
@@ -74,6 +78,15 @@ var FSHADER_SOURCE = `
     else {                                    // error, use red
         gl_FragColor = vec4(1.0, 0.2, 0.2, 1.0);
     }
+
+    vec3 lightVector = u_lightPos - vec3(v_VertPos);
+    float r=length(lightVector);
+    if(r<1.0){
+        gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+    }
+    else if(r<2.0){
+        gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
+    }
   }`;
 
 const POINT = 0;
@@ -103,6 +116,7 @@ let u_sampler6;
 let u_sampler7;
 let u_sampler8;
 let u_sampler9;
+let u_lightPos; 
 
 // UI variables
 let g_selectedSize = 10; 
@@ -116,6 +130,7 @@ let g_lowerArmAngle = 0.0;
 let g_animationOn = false;
 let g_legAngle = 0.0;
 let g_normalOn = false;
+let g_lightPos = [0, 1, -2];
 
 // camera variables
 let eyeVector = new Vector3([0, 0, 3]);
@@ -261,6 +276,12 @@ function connectVariablesToGLSL() {
     u_whichTexture = gl.getUniformLocation(gl.program, 'u_whichTexture');
     if(!u_whichTexture){
         console.log("Failed to get the storage location of u_whichTexture");
+        return false;
+    }
+
+    u_lightPos = gl.getUniformLocation(gl.program, 'u_lightPos');
+    if(!u_lightPos){
+        console.log("Failed to get the storage location of u_lightPos");
         return false;
     }
 }
@@ -566,6 +587,15 @@ function renderAllShapes() {
     sphere.textureNum = 0;
     if (g_normalOn) sphere.textureNum = -3;
     sphere.renderFast();
+
+    gl.uniform3f(u_lightPos, g_lightPos[0], g_lightPos[1], g_lightPos[2]);
+    let light = new Cube();
+    light.color = [1, 1, 0, 1];
+    light.matrix.translate(g_lightPos[0], g_lightPos[1], g_lightPos[2]);
+    light.matrix.scale(0.1, 0.1, 0.1);
+    light.matrix.translate(-0.5, -0.5, -0.5);
+    light.textureNum = 0;
+    light.renderFast();
     
 }
 
@@ -591,6 +621,9 @@ function setupHTMLElements(){
     // sliders
     document.getElementById("angleSliderX").addEventListener("mousemove", function () { g_globalAngleX = this.value; } );
     document.getElementById("angleSliderY").addEventListener("mousemove", function () { g_globalAngleY = this.value; } );
+    document.getElementById("lightSlideX").addEventListener("mousemove", function () { g_lightPos[0] = this.value/100; renderAllShapes(); } );
+    document.getElementById("lightSlideY").addEventListener("mousemove", function () { g_lightPos[1] = this.value/100; renderAllShapes(); } );
+    document.getElementById("lightSlideZ").addEventListener("mousemove", function () { g_lightPos[2] = this.value/100; renderAllShapes(); } );
 
     // buttons 
     document.getElementById("normalOn").onclick = function () { g_normalOn = true; renderAllShapes(); };
