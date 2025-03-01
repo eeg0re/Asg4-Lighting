@@ -31,19 +31,24 @@ class Sphere{
                 let p3 = [Math.sin(t)*Math.cos(r+dd), Math.sin(t)*Math.sin(r+dd),  Math.cos(t)];
                 let p4 = [Math.sin(t+dd)*Math.cos(r+dd), Math.sin(t+dd)*Math.sin(r+dd),  Math.cos(t+dd)];
 
-                allVertices = allVertices.concat(p1);
-                allUVs = allUVs.concat([0,0]);
-                allVertices = allVertices.concat(p2);
-                allUVs = allUVs.concat([0,0]);
-                allVertices = allVertices.concat(p4);
-                allUVs = allUVs.concat([0,0]);
+                let uv1 = [t/Math.PI, r/(2*Math.PI)];
+                let uv2 = [(t+dd)/Math.PI, r/(2*Math.PI)];
+                let uv3 = [t/Math.PI, (r+dd)/(2*Math.PI)];
+                let uv4 = [(t+dd)/Math.PI, (r+dd)/(2*Math.PI)];
 
                 allVertices = allVertices.concat(p1);
-                allUVs = allUVs.concat([0,0]);
+                allUVs = allUVs.concat(uv1);
+                allVertices = allVertices.concat(p2);
+                allUVs = allUVs.concat(uv2);
                 allVertices = allVertices.concat(p4);
-                allUVs = allUVs.concat([0,0]);
+                allUVs = allUVs.concat(uv4);
+
+                allVertices = allVertices.concat(p1);
+                allUVs = allUVs.concat(uv1);
+                allVertices = allVertices.concat(p4);
+                allUVs = allUVs.concat(uv4);
                 allVertices = allVertices.concat(p3);
-                allUVs = allUVs.concat([0,0]);
+                allUVs = allUVs.concat(uv3);
 
             }
         }

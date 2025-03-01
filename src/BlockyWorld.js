@@ -563,7 +563,7 @@ function renderAllShapes() {
     let sphere = new Sphere();
     sphere.matrix = new Matrix4();
     sphere.matrix.translate(2, 0.2, 0.1);
-    sphere.textureNum = -2;
+    sphere.textureNum = 0;
     if (g_normalOn) sphere.textureNum = -3;
     sphere.renderFast();
     
