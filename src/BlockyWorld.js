@@ -559,6 +559,13 @@ function renderAllShapes() {
     rightLegMat = new Matrix4(rightLeg.matrix);   // copy this matrix for the next joint
     rightLeg.matrix.scale(0.25, 0.3, 0.25);
     rightLeg.renderFast();
+
+    let sphere = new Sphere();
+    sphere.matrix = new Matrix4();
+    sphere.matrix.translate(2, 0.2, 0.1);
+    sphere.textureNum = -2;
+    if (g_normalOn) sphere.textureNum = -3;
+    sphere.renderFast();
     
 }
 

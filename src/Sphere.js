@@ -19,69 +19,36 @@ class Sphere{
         gl.uniformMatrix4fv(u_ModelMatrix, false, this.matrix.elements);
 
         let d = Math.PI/10;
-        let dd = Math.PI/100;
+        let dd = Math.PI/10;
 
         let allVertices = [];
         let allUVs = [];
-        let allNormals = [];
 
         for (let t = 0; t < Math.PI; t += d){
             for (let r = 0; r < (2*Math.PI); r += d){
-                let p1 = [sin(t+dd)*cos(r), sin(t)*sin(r),  cos(t)];
-                let p2 = [sin(t+dd)*cos(r), sin(t+dd)*sin(r),  cos(t+dd)];
-                let p3 = [sin(t)*cos(r+dd), sin(t)*sin(r+dd),  cos(t)];
-                let p4 = [sin(t+dd)*cos(r+dd), sin(t+dd)*sin(r+dd),  cos(t+dd)];
+                let p1 = [Math.sin(t)*Math.cos(r), Math.sin(t)*Math.sin(r),  Math.cos(t)];
+                let p2 = [Math.sin(t+dd)*Math.cos(r), Math.sin(t+dd)*Math.sin(r),  Math.cos(t+dd)];
+                let p3 = [Math.sin(t)*Math.cos(r+dd), Math.sin(t)*Math.sin(r+dd),  Math.cos(t)];
+                let p4 = [Math.sin(t+dd)*Math.cos(r+dd), Math.sin(t+dd)*Math.sin(r+dd),  Math.cos(t+dd)];
+
+                allVertices = allVertices.concat(p1);
+                allUVs = allUVs.concat([0,0]);
+                allVertices = allVertices.concat(p2);
+                allUVs = allUVs.concat([0,0]);
+                allVertices = allVertices.concat(p4);
+                allUVs = allUVs.concat([0,0]);
+
+                allVertices = allVertices.concat(p1);
+                allUVs = allUVs.concat([0,0]);
+                allVertices = allVertices.concat(p4);
+                allUVs = allUVs.concat([0,0]);
+                allVertices = allVertices.concat(p3);
+                allUVs = allUVs.concat([0,0]);
+
             }
         }
+        gl.uniform4f(u_FragColor, 1, 1, 1, 1);
 
-        // // front of cube
-        // allVertices = allVertices.concat([0,0,0, 1,1,0, 1,0,0]);
-        // allVertices = allVertices.concat([0,0,0, 0,1,0, 1,1,0]);
-        // allUVs = allUVs.concat([0,0, 1,1, 1,0]);
-        // allUVs = allUVs.concat([0,0, 0,1, 1,1]);
-        // allNormals = allNormals.concat([0,0,-1, 0,0,-1, 0,0,-1]); 
-        // allNormals = allNormals.concat([0,0,-1, 0,0,-1, 0,0,-1]); 
-
-        // // top of cube
-        // allVertices = allVertices.concat([0,1,0, 0,1,1, 1,1,1]);
-        // allVertices = allVertices.concat([0,1,0, 1,1,1, 1,1,0]);
-        // allUVs = allUVs.concat([0,1, 0,0, 1,0]);
-        // allUVs = allUVs.concat([0,1, 1,0, 1,1]);
-        // allNormals = allNormals.concat([0,1,0, 0,1,0, 0,1,0]);
-        // allNormals = allNormals.concat([0,1,0, 0,1,0, 0,1,0]);
-
-        // // bottom of cube
-        // allVertices = allVertices.concat([0,0,0, 1,0,0, 1,0,1]);
-        // allVertices = allVertices.concat([0,0,0, 0,0,1, 1,0,1]);
-        // allUVs = allUVs.concat([0,0, 1,0, 1,1]);
-        // allUVs = allUVs.concat([0,0, 0,1, 1,1]);
-        // allNormals = allNormals.concat([0,-1,0, 0,-1,0, 0,-1,0]);
-        // allNormals = allNormals.concat([0,-1,0, 0,-1,0, 0,-1,0]);
-
-        // // left side of cube
-        // allVertices = allVertices.concat([0,0,0, 0,1,0, 0,1,1]);
-        // allVertices = allVertices.concat([0,0,0, 0,0,1, 0,1,1]);
-        // allUVs = allUVs.concat([0,0, 0,1, 1,1]);
-        // allUVs = allUVs.concat([0,0, 1,0, 1,1]);
-        // allNormals = allNormals.concat([-1,0,0, -1,0,0, -1,0,0]);
-        // allNormals = allNormals.concat([-1,0,0, -1,0,0, -1,0,0]);
-
-        // // right side of cube
-        // allVertices = allVertices.concat([1,0,0, 1,1,0, 1,1,1]);
-        // allVertices = allVertices.concat([1,0,0, 1,0,1, 1,1,1]);
-        // allUVs = allUVs.concat([0,0, 0,1, 1,1]);
-        // allUVs = allUVs.concat([0,0, 1,0, 1,1]);
-        // allNormals = allNormals.concat([1,0,0, 1,0,0, 1,0,0]);
-        // allNormals = allNormals.concat([1,0,0, 1,0,0, 1,0,0]);
-
-        // // back of cube
-        // allVertices = allVertices.concat([0,0,1, 1,0,1, 1,1,1]);
-        // allVertices = allVertices.concat([0,0,1, 0,1,1, 1,1,1]);
-        // allUVs = allUVs.concat([0,0, 1,0, 1,1]);
-        // allUVs = allUVs.concat([0,0, 0,1, 1,1]);
-        // allNormals = allNormals.concat([0,0,1, 0,0,1, 0,0,1]);
-        // allNormals = allNormals.concat([0,0,1, 0,0,1, 0,0,1]);
-
-        drawTriangle3DUVNormal(allVertices, allUVs, allNormals);
+        drawTriangle3DUVNormal(allVertices, allUVs, allVertices);
     }
 }
