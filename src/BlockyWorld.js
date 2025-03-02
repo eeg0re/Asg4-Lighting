@@ -158,7 +158,7 @@ let g_lowerArmAngle = 0.0;
 let g_animationOn = false;
 let g_legAngle = 0.0;
 let g_normalOn = false;
-let g_lightPos = [0, 1, 2];
+let g_lightPos = [0, -1, 2];
 let g_lightOn = 1;
 
 // camera variables
